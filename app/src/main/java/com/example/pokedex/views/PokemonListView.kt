@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,17 +28,17 @@ class PokemonListView {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(pokemonList!!.results) { pokemon ->
-                    val name = pokemon.name
-                    infoPokemonViewModel.getPokemon(name)
-                    println(actualPokemon?.name)
+                    infoPokemonViewModel.getPokemon(pokemon.name)
                     Card(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = actualPokemon?.sprites?.other?.officialArtwork?.frontDefault),
-                            contentDescription = actualPokemon?.id,
-                            contentScale = ContentScale.Crop,
-                        )
+//                        Image(
+//                            painter = rememberAsyncImagePainter(model = actualPokemon?.sprites?.other?.officialArtwork?.frontDefault),
+//                            contentDescription = actualPokemon?.id,
+//                            contentScale = ContentScale.Crop,
+//                        )
+//                        Text(text = actualPokemon?.name.toString())
+                        Text(text = actualPokemon?.name.toString())
                     }
                 }
             }

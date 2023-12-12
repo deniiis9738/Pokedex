@@ -16,8 +16,4 @@ class PokemonListRepository {
     suspend fun getPokemonList(): PokemonList {
         return pokeApiService.getPokemonList()
     }
-
-    suspend fun getPokemon(name: String): Pokemon {
-        return pokeApiService.getPokemonByName(name)
-    }
 }

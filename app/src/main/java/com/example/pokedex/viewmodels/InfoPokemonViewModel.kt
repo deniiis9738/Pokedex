@@ -17,19 +17,11 @@ import java.util.Locale
 class InfoPokemonViewModel(application: Application): AndroidViewModel(application) {
     private val infoPokemonRepository = InfoPokemonRepository(application)
 
-    init {
-        viewModelScope.launch {
-            delay(3000)
-            getPokemon("")
-        }
-    }
-
     private var _pokemon = MutableLiveData<Pokemon>()
     val pokemon: LiveData<Pokemon> = _pokemon
 
     fun getPokemon(name: String) {
         viewModelScope.launch {
-            delay(5000)
             val loadedPokemon = withContext(Dispatchers.IO) {
                 infoPokemonRepository.getPokemon(name)
             }
