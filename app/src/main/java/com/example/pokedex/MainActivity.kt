@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.pokedex.views.InfoPokemonView
-import com.example.pokedex.viewmodels.InfoPokemonViewModel
 import com.example.pokedex.ui.theme.PokedexTheme
 import com.example.pokedex.viewmodels.PokemonListViewModel
-import com.example.pokedex.views.PokemonListView
+import com.example.pokedex.ui.screens.PokemonListView
+import com.example.pokedex.viewmodels.InfoPokemonViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -26,10 +25,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val infoPokemonViewModel: InfoPokemonViewModel by viewModels()
-//                    InfoPokemonView().InfoPokemon(infoPokemonViewModel = infoPokemonViewModel)
+//                    InfoPokemonView(infoPokemonViewModel = infoPokemonViewModel)
 
                     val pokemonListViewModel: PokemonListViewModel by viewModels()
-                    PokemonListView().PokemonList(pokemonListViewModel = pokemonListViewModel, infoPokemonViewModel = infoPokemonViewModel)
+                    PokemonListView(pokemonListViewModel, infoPokemonViewModel)
                 }
             }
         }
