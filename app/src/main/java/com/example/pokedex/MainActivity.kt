@@ -6,17 +6,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.pokedex.ui.theme.PokedexTheme
-import com.example.pokedex.viewmodels.PokemonListViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.pokedex.ui.screens.InfoPokemonView
 import com.example.pokedex.ui.screens.PokemonListView
+import com.example.pokedex.ui.theme.PokedexTheme
 import com.example.pokedex.viewmodels.InfoPokemonViewModel
+import com.example.pokedex.viewmodels.PokemonListViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,10 +27,27 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val infoPokemonViewModel: InfoPokemonViewModel by viewModels()
-//                    InfoPokemonView(infoPokemonViewModel = infoPokemonViewModel)
-
                     val pokemonListViewModel: PokemonListViewModel by viewModels()
-                    PokemonListView(pokemonListViewModel, infoPokemonViewModel)
+                    val navController = rememberNavController()
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = "PokemonListView"
+                    ) {
+                        composable("PokemonListView") {
+                            PokemonListView(pokemonListViewModel) { pokemonName ->
+                                navController.navigate("InfoPokemonView/$pokemonName")
+                            }
+                        }
+                        composable("InfoPokemonView/{pokemonName}") { backStackEntry ->
+                            val pokemonName = backStackEntry.arguments?.getString("pokemonName")
+                            if (pokemonName != null) {
+                                InfoPokemonView(infoPokemonViewModel, pokemonName) {
+                                    navController.popBackStack()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

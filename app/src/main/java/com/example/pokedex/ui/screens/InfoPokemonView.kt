@@ -26,7 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -46,7 +46,8 @@ import com.example.pokedex.ui.theme.BlackGrey
 import java.util.Locale
 
 @Composable
-fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel) {
+fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel, pokemonName: String, onBackClicked: () -> Unit) {
+    infoPokemonViewModel.getPokemon(pokemonName)
     val pokemon by infoPokemonViewModel.pokemon.observeAsState()
     val types = pokemon?.types ?: emptyList()
 
@@ -65,7 +66,7 @@ fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel) {
                 .background(BlackGrey),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            pokemon?.let { TopBar(it, infoPokemonViewModel) }
+            pokemon?.let { TopBar(it, infoPokemonViewModel, onBackClicked) }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -231,7 +232,7 @@ fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel) {
+fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel, onBackClicked: () -> Unit) {
     val types = pokemon.types
     TopAppBar(
         title = { Text(
@@ -242,7 +243,7 @@ fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel) {
             .fillMaxWidth(),
         navigationIcon = {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onBackClicked() },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -251,7 +252,7 @@ fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel) {
                 )
             }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(infoPokemonViewModel.getTypeColor(types[0].type.name)!!),
+        colors = topAppBarColors(infoPokemonViewModel.getTypeColor(types[0].type.name)!!),
         actions = {
             IconButton(
                 onClick = { /*TODO*/ }

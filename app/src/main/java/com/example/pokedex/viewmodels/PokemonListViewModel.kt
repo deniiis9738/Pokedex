@@ -6,11 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.models.Pokemon
-import com.example.pokedex.data.models.PokemonList
 import com.example.pokedex.data.repositories.InfoPokemonRepository
 import com.example.pokedex.data.repositories.PokemonListRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -20,22 +18,38 @@ class PokemonListViewModel: ViewModel() {
 
     init {
         viewModelScope.launch {
-            getPokemonList()
+            getPokemonList(){}
         }
     }
 
     private var _pokemonListWithInfo = MutableLiveData<List<Pokemon>>()
     val pokemonListWithInfo: LiveData<List<Pokemon>> = _pokemonListWithInfo
 
-    private fun getPokemonList() {
+    private var currentPage = 0
+    private var isLoading = false
+    private val pageSize = 20
+
+    fun onListEndReached(onLoadComplete: () -> Unit) {
+        if (!isLoading) {
+            getPokemonList(onLoadComplete)
+        }
+    }
+
+    private fun getPokemonList(onLoadComplete: () -> Unit) {
         viewModelScope.launch {
+            isLoading = true
+            val start = currentPage * pageSize
             val loadedPokemonList = withContext(Dispatchers.IO) {
-                val pokemonList = pokemonListRepository.getPokemonList()
+                val pokemonList = pokemonListRepository.getPokemonList(start, pageSize)
                 pokemonList.results.map { pokemon ->
                     infoPokemonRepository.getPokemon(pokemon.name)
                 }
             }
-            _pokemonListWithInfo.postValue(loadedPokemonList)
+            _pokemonListWithInfo.postValue(_pokemonListWithInfo.value.orEmpty() + loadedPokemonList)
+            isLoading = false
+            currentPage++
+            onLoadComplete()
         }
     }
+
 }

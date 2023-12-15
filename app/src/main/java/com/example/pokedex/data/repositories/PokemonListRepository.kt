@@ -13,7 +13,7 @@ class PokemonListRepository {
 
     private val pokeApiService = retrofit.create(PokeApiService::class.java)
 
-    suspend fun getPokemonList(): PokemonList {
-        return pokeApiService.getPokemonList()
+    suspend fun getPokemonList(offset: Int, limit: Int): PokemonList {
+        return pokeApiService.getPokemonList(limit = limit, offset = offset)
     }
 }
