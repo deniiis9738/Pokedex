@@ -18,7 +18,7 @@ class PokemonListViewModel: ViewModel() {
 
     init {
         viewModelScope.launch {
-            getPokemonList(){}
+            getPokemonList() {}
         }
     }
 
@@ -29,13 +29,7 @@ class PokemonListViewModel: ViewModel() {
     private var isLoading = false
     private val pageSize = 20
 
-    fun onListEndReached(onLoadComplete: () -> Unit) {
-        if (!isLoading) {
-            getPokemonList(onLoadComplete)
-        }
-    }
-
-    private fun getPokemonList(onLoadComplete: () -> Unit) {
+    fun getPokemonList(onLoadComplete: () -> Unit) {
         viewModelScope.launch {
             isLoading = true
             val start = currentPage * pageSize
@@ -51,5 +45,4 @@ class PokemonListViewModel: ViewModel() {
             onLoadComplete()
         }
     }
-
 }
