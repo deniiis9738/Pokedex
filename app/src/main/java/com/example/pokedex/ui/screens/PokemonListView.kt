@@ -61,6 +61,7 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
         }
     }
     val pokemonListWithInfo by pokemonListViewModel.pokemonListWithInfo.observeAsState(emptyList())
+    val pokemonList by pokemonListViewModel.pokemonList.observeAsState(emptyList())
 
     Box(
         modifier = Modifier
@@ -75,6 +76,7 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                     value = searchText,
                     onValueChange = {
                         searchText = it
+                        pokemonListViewModel.performSearch(it)
                                     },
                     label = { Text("Search") },
                     modifier = Modifier
@@ -91,12 +93,14 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                 state = lazyGridState,
                 columns = GridCells.Fixed(2)
             ) {
-                if (searchText == "") {
+                if (searchText.isEmpty()) {
                     items(pokemonListWithInfo) { pokemon ->
                         CardListPokemon(onPokemonSelected, pokemon)
                     }
                 } else {
-
+                    items(pokemonList) { pokemon ->
+                        CardListPokemon(onPokemonSelected, pokemon)
+                    }
                 }
             }
         }

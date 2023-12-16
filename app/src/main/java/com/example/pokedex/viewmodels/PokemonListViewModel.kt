@@ -18,6 +18,7 @@ class PokemonListViewModel: ViewModel() {
 
     init {
         viewModelScope.launch {
+            getAllPokemonNames()
             getPokemonList() {}
         }
     }
@@ -43,6 +44,34 @@ class PokemonListViewModel: ViewModel() {
             isLoading = false
             currentPage++
             onLoadComplete()
+        }
+    }
+
+    private var allPokemonNames: List<String> = emptyList()
+
+    private suspend fun getAllPokemonNames() {
+        allPokemonNames = withContext(Dispatchers.IO) {
+            pokemonListRepository.getAllPokemonNames()
+        }
+    }
+
+    private var _pokemonList = MutableLiveData<List<Pokemon>>()
+    val pokemonList: LiveData<List<Pokemon>> = _pokemonList
+
+    suspend fun filterPokemonListByName(searchText: String) {
+        val filteredList = allPokemonNames
+            .filter { it.startsWith(searchText, ignoreCase = true) }
+            .take(10)
+            .map { name ->
+                infoPokemonRepository.getPokemon(name)
+            }
+
+        _pokemonList.value = filteredList
+    }
+
+    fun performSearch(searchText: String) {
+        viewModelScope.launch {
+            filterPokemonListByName(searchText)
         }
     }
 }

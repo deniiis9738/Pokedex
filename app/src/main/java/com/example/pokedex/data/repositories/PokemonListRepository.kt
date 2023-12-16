@@ -15,4 +15,8 @@ class PokemonListRepository {
     suspend fun getPokemonList(offset: Int, limit: Int): PokemonList {
         return pokeApiService.getPokemonList(limit = limit, offset = offset)
     }
+
+    suspend fun getAllPokemonNames(): List<String> {
+        return pokeApiService.getAllPokemonNames().results.map { it.name }
+    }
 }

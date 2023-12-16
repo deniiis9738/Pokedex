@@ -15,4 +15,7 @@ interface PokeApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): PokemonList
+
+    @GET("pokemon?limit=1300")
+    suspend fun getAllPokemonNames(): PokemonList
 }
