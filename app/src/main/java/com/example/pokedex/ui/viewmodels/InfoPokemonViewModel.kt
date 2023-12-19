@@ -1,4 +1,4 @@
-package com.example.pokedex.viewmodels
+package com.example.pokedex.ui.viewmodels
 
 import com.example.pokedex.data.models.Pokemon
 import android.app.Application

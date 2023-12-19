@@ -41,7 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.pokedex.viewmodels.InfoPokemonViewModel
+import com.example.pokedex.ui.viewmodels.InfoPokemonViewModel
 import com.example.pokedex.ui.theme.BlackGrey
 import java.util.Locale
 

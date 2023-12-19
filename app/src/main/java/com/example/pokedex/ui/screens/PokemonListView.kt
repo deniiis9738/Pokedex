@@ -31,7 +31,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.pokedex.ui.components.CardListPokemon
 import com.example.pokedex.ui.theme.BlackGrey
-import com.example.pokedex.viewmodels.PokemonListViewModel
+import com.example.pokedex.ui.viewmodels.PokemonListViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelected: (String) -> Unit) {
@@ -63,6 +64,11 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
     val pokemonListWithInfo by pokemonListViewModel.pokemonListWithInfo.observeAsState(emptyList())
     val pokemonList by pokemonListViewModel.pokemonList.observeAsState(emptyList())
 
+    LaunchedEffect(searchText) {
+        delay(200)
+        pokemonListViewModel.performSearch(searchText)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +82,6 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                     value = searchText,
                     onValueChange = {
                         searchText = it
-                        pokemonListViewModel.performSearch(it)
                                     },
                     label = { Text("Search") },
                     modifier = Modifier

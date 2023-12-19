@@ -14,9 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pokedex.ui.screens.InfoPokemonView
 import com.example.pokedex.ui.screens.PokemonListView
 import com.example.pokedex.ui.theme.PokedexTheme
-import com.example.pokedex.viewmodels.InfoPokemonViewModel
-import com.example.pokedex.viewmodels.PokemonListViewModel
+import com.example.pokedex.ui.viewmodels.InfoPokemonViewModel
+import com.example.pokedex.ui.viewmodels.PokemonListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
