@@ -3,8 +3,9 @@ package com.example.pokedex.data.repositories
 import com.example.pokedex.data.models.PokemonList
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class PokemonListRepository {
+class PokemonListRepository @Inject constructor() {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://pokeapi.co/api/v2/")
         .addConverterFactory(GsonConverterFactory.create())

@@ -8,13 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.models.Pokemon
 import com.example.pokedex.data.repositories.InfoPokemonRepository
 import com.example.pokedex.data.repositories.PokemonListRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class PokemonListViewModel: ViewModel() {
-    private val pokemonListRepository = PokemonListRepository()
-    private val infoPokemonRepository = InfoPokemonRepository(Application())
+@HiltViewModel
+class PokemonListViewModel @Inject constructor(
+    private val pokemonListRepository: PokemonListRepository,
+    private val infoPokemonRepository: InfoPokemonRepository
+) : ViewModel() {
 
     init {
         viewModelScope.launch {

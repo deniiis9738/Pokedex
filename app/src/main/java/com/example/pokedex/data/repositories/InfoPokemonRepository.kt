@@ -6,8 +6,11 @@ import com.example.pokedex.data.models.StatsColor
 import com.example.pokedex.data.models.TypeColor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class InfoPokemonRepository(private val application: Application) {
+class InfoPokemonRepository @Inject constructor(
+    private val application: Application)
+{
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://pokeapi.co/api/v2/")
         .addConverterFactory(GsonConverterFactory.create())
