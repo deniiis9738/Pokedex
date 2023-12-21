@@ -2,8 +2,8 @@ package com.example.pokedex.data.repositories
 
 import com.example.pokedex.data.models.Pokemon
 import android.app.Application
-import com.example.pokedex.data.models.StatsColor
-import com.example.pokedex.data.models.TypeColor
+import com.example.pokedex.ui.utils.StatsColor
+import com.example.pokedex.ui.utils.TypeColor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
@@ -21,14 +21,6 @@ class InfoPokemonRepository @Inject constructor(
     suspend fun getPokemon(name: String): Pokemon {
         return pokeApiService.getPokemonByName(name)
     }
-
-    //Read pokemon from a json
-//    fun getPokemon(): Pokemon {
-//        val gson = Gson()
-//        val jsonInputStream = application.assets.open("rayquaza.json")
-//
-//        return gson.fromJson(jsonInputStream.reader(), Pokemon::class.java)
-//    }
 
     fun colorTypes(): HashMap<String, TypeColor> {
         return hashMapOf(

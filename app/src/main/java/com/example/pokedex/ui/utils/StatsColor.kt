@@ -1,4 +1,4 @@
-package com.example.pokedex.data.models
+package com.example.pokedex.ui.utils
 
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex.ui.theme.atkColor

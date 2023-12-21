@@ -12,8 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import javax.inject.Inject
 
-class InfoPokemonViewModel(application: Application): AndroidViewModel(application) {
+class InfoPokemonViewModel @Inject constructor (
+    application: Application
+): AndroidViewModel(application) {
     private val infoPokemonRepository = InfoPokemonRepository(application)
 
     private var _pokemon = MutableLiveData<Pokemon>()
