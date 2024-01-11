@@ -5,6 +5,8 @@ import com.example.pokedex.data.models.Pokemon
 import com.example.pokedex.data.models.PokemonList
 import com.example.pokedex.domain.repositories.IPokemonRepository
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.BufferedReader
 import javax.inject.Inject
 
 class JsonRepositoryImpl @Inject constructor(
@@ -18,10 +20,17 @@ class JsonRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPokemonList(offset: Int, limit: Int): PokemonList {
-        TODO("Not yet implemented")
+        val jsonInputStream = application.assets.open("pokemon_list.json")
+        val reader = BufferedReader(jsonInputStream.reader())
+        val type = object : TypeToken<PokemonList>() {}.type
+        return gson.fromJson(reader, type)
     }
 
     override suspend fun getAllPokemonNames(): List<String> {
-        TODO("Not yet implemented")
+        val jsonInputStream = application.assets.open("pokemon_list.json")
+        val reader = BufferedReader(jsonInputStream.reader())
+        val type = object : TypeToken<PokemonList>() {}.type
+        val pokemonList = gson.fromJson<PokemonList>(reader, type)
+        return pokemonList.results.map { it.name }
     }
 }

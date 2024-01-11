@@ -1,13 +1,12 @@
 package com.example.pokedex.ui.viewmodels
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.data.models.Pokemon
-import com.example.pokedex.data.repositories.InfoPokemonRepository
-import com.example.pokedex.data.repositories.PokemonListRepository
+import com.example.pokedex.data.repositories.ApìRepositoryImpl
+import com.example.pokedex.data.repositories.JsonRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    private val pokemonListRepository: PokemonListRepository,
-    private val infoPokemonRepository: InfoPokemonRepository
+    private val apìRepositoryImpl: ApìRepositoryImpl,
+    private val jsonRepositoryImpl: JsonRepositoryImpl
 ) : ViewModel() {
 
     init {
@@ -39,9 +38,9 @@ class PokemonListViewModel @Inject constructor(
             isLoading = true
             val start = currentPage * pageSize
             val loadedPokemonList = withContext(Dispatchers.IO) {
-                val pokemonList = pokemonListRepository.getPokemonList(start, pageSize)
+                val pokemonList = apìRepositoryImpl.getPokemonList(start, pageSize)
                 pokemonList.results.map { pokemon ->
-                    infoPokemonRepository.getPokemon(pokemon.name)
+                    apìRepositoryImpl.getPokemonByName(pokemon.name)
                 }
             }
             _pokemonListWithInfo.postValue(_pokemonListWithInfo.value.orEmpty() + loadedPokemonList)
@@ -55,7 +54,7 @@ class PokemonListViewModel @Inject constructor(
 
     private suspend fun getAllPokemonNames() {
         allPokemonNames = withContext(Dispatchers.IO) {
-            pokemonListRepository.getAllPokemonNames()
+            apìRepositoryImpl.getAllPokemonNames()
         }
     }
 
@@ -67,7 +66,7 @@ class PokemonListViewModel @Inject constructor(
             .filter { it.startsWith(searchText, ignoreCase = true) }
             .take(10)
             .map { name ->
-                infoPokemonRepository.getPokemon(name)
+                apìRepositoryImpl.getPokemonByName(name)
             }
 
         _pokemonList.value = filteredList
