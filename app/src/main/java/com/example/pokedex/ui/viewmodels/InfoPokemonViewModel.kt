@@ -6,8 +6,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex.data.repositories.ApìRepositoryImpl
+import com.example.pokedex.data.repositories.ApiRepositoryImpl
 import com.example.pokedex.data.repositories.JsonRepositoryImpl
 import com.example.pokedex.ui.utils.ColorStats
 import com.example.pokedex.ui.utils.ColorTypes
@@ -18,20 +19,28 @@ import java.util.Locale
 import javax.inject.Inject
 
 class InfoPokemonViewModel @Inject constructor (
-    application: Application,
-): AndroidViewModel(application) {
-    private val jsonRepositoryImpl = JsonRepositoryImpl(application)
-    private val apìRepositoryImpl = ApìRepositoryImpl()
+    val apiRepositoryImpl: ApiRepositoryImpl,
+    val jsonRepositoryImpl: JsonRepositoryImpl
+): ViewModel() {
 
     private var _pokemon = MutableLiveData<Pokemon>()
     val pokemon: LiveData<Pokemon> = _pokemon
 
     fun getPokemon(name: String) {
-        viewModelScope.launch {
-            val loadedPokemon = withContext(Dispatchers.IO) {
-                apìRepositoryImpl.getPokemonByName(name)
+        try {
+            viewModelScope.launch {
+                val loadedPokemon = withContext(Dispatchers.IO) {
+                    apiRepositoryImpl.getPokemonByName(name)
+                }
+                _pokemon.postValue(loadedPokemon)
             }
-            _pokemon.postValue(loadedPokemon)
+        } catch (e: Exception) {
+            viewModelScope.launch {
+                val loadedPokemon = withContext(Dispatchers.IO) {
+                    jsonRepositoryImpl.getPokemonByName(name)
+                }
+                _pokemon.postValue(loadedPokemon)
+            }
         }
     }
 
