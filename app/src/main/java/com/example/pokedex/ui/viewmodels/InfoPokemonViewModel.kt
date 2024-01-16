@@ -15,6 +15,7 @@ import com.example.pokedex.ui.utils.ColorTypes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
 import java.util.Locale
 import javax.inject.Inject
 
@@ -27,15 +28,13 @@ class InfoPokemonViewModel @Inject constructor (
     val pokemon: LiveData<Pokemon> = _pokemon
 
     fun getPokemon(name: String) {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 val loadedPokemon = withContext(Dispatchers.IO) {
                     apiRepositoryImpl.getPokemonByName(name)
                 }
                 _pokemon.postValue(loadedPokemon)
-            }
-        } catch (e: Exception) {
-            viewModelScope.launch {
+            } catch (e: UnknownHostException) {
                 val loadedPokemon = withContext(Dispatchers.IO) {
                     jsonRepositoryImpl.getPokemonByName(name)
                 }

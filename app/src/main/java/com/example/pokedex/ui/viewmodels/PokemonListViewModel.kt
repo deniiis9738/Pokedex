@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.RuntimeException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -62,12 +61,10 @@ class PokemonListViewModel @Inject constructor(
     private var allPokemonNames: List<String> = emptyList()
 
     private suspend fun getAllPokemonNames() {
-        try {
-            allPokemonNames = withContext(Dispatchers.IO) {
-                apiRepositoryImpl.getAllPokemonNames()
-            }
-        } catch (e: Exception) {
-            allPokemonNames = withContext(Dispatchers.IO) {
+        allPokemonNames = withContext(Dispatchers.IO) {
+            try {
+                jsonRepositoryImpl.getAllPokemonNames()
+            } catch (e: UnknownHostException) {
                 jsonRepositoryImpl.getAllPokemonNames()
             }
         }
