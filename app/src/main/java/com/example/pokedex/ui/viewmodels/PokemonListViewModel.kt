@@ -70,8 +70,8 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    private var _pokemonList = MutableLiveData<List<Pokemon>>()
-    val pokemonList: LiveData<List<Pokemon>> = _pokemonList
+    private var _pokemonFilteredList = MutableLiveData<List<Pokemon>>()
+    val pokemonFilteredList: LiveData<List<Pokemon>> = _pokemonFilteredList
 
     suspend fun filterPokemonListByName(searchText: String) {
         try {
@@ -82,7 +82,7 @@ class PokemonListViewModel @Inject constructor(
                     apiRepositoryImpl.getPokemonByName(name)
                 }
 
-            _pokemonList.value = filteredList
+            _pokemonFilteredList.value = filteredList
         } catch (e: Exception) {
             val start = currentPage * pageSize
             val loadedPokemonList = withContext(Dispatchers.IO) {

@@ -62,7 +62,7 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
         }
     }
     val pokemonListWithInfo by pokemonListViewModel.pokemonListWithInfo.observeAsState(emptyList())
-    val pokemonList by pokemonListViewModel.pokemonList.observeAsState(emptyList())
+    val pokemonFilteredList by pokemonListViewModel.pokemonFilteredList.observeAsState(emptyList())
 
     LaunchedEffect(searchText) {
         delay(200)
@@ -103,7 +103,7 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                         CardListPokemon(onPokemonSelected, pokemon)
                     }
                 } else {
-                    items(pokemonList) { pokemon ->
+                    items(pokemonFilteredList) { pokemon ->
                         CardListPokemon(onPokemonSelected, pokemon)
                     }
                 }
