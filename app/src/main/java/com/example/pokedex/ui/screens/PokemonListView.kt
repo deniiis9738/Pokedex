@@ -1,18 +1,23 @@
 package com.example.pokedex.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -27,13 +32,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.pokedex.R
 import com.example.pokedex.ui.components.CardListPokemon
 import com.example.pokedex.ui.theme.BlackGrey
 import com.example.pokedex.ui.viewmodels.PokemonListViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelected: (String) -> Unit) {
     var searchText by remember { mutableStateOf("") }
@@ -64,6 +75,15 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
     val pokemonListWithInfo by pokemonListViewModel.pokemonListWithInfo.observeAsState(emptyList())
     val pokemonFilteredList by pokemonListViewModel.pokemonFilteredList.observeAsState(emptyList())
 
+    var isLoadingScreen by remember { mutableStateOf(true) }
+
+    if (pokemonListWithInfo.isNotEmpty()) {
+        GlobalScope.launch {
+            delay(3000)
+            isLoadingScreen = false
+        }
+    }
+
     LaunchedEffect(searchText) {
         delay(200)
         pokemonListViewModel.performSearch(searchText)
@@ -74,37 +94,57 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+        if (isLoadingScreen) {
+            Image(
+                painter = painterResource(id = R.drawable.paisaje),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextField(
-                    value = searchText,
-                    onValueChange = {
-                        searchText = it
-                                    },
-                    label = { Text("Search") },
+                CircularProgressIndicator(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    shape = RoundedCornerShape(60.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                    )
+                        .size(50.dp)
+                        .padding(8.dp),
+                    color = Color.Red
                 )
             }
-            LazyVerticalGrid(
-                state = lazyGridState,
-                columns = GridCells.Fixed(2)
-            ) {
-                if (searchText.isEmpty()) {
-                    items(pokemonListWithInfo) { pokemon ->
-                        CardListPokemon(onPokemonSelected, pokemon)
-                    }
-                } else {
-                    items(pokemonFilteredList) { pokemon ->
-                        CardListPokemon(onPokemonSelected, pokemon)
+        } else {
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextField(
+                        value = searchText,
+                        onValueChange = {
+                            searchText = it
+                        },
+                        label = { Text("Search") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        shape = RoundedCornerShape(60.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White,
+                        )
+                    )
+                }
+                LazyVerticalGrid(
+                    state = lazyGridState,
+                    columns = GridCells.Fixed(2)
+                ) {
+                    if (searchText.isEmpty()) {
+                        items(pokemonListWithInfo) { pokemon ->
+                            CardListPokemon(onPokemonSelected, pokemon)
+                        }
+                    } else {
+                        items(pokemonFilteredList) { pokemon ->
+                            CardListPokemon(onPokemonSelected, pokemon)
+                        }
                     }
                 }
             }
