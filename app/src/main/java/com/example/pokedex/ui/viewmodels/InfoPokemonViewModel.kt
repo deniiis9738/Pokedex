@@ -1,17 +1,16 @@
 package com.example.pokedex.ui.viewmodels
 
-import com.example.pokedex.data.models.Pokemon
-import android.app.Application
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex.data.models.Pokemon
 import com.example.pokedex.data.repositories.ApiRepositoryImpl
 import com.example.pokedex.data.repositories.JsonRepositoryImpl
 import com.example.pokedex.ui.utils.ColorStats
 import com.example.pokedex.ui.utils.ColorTypes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,6 +18,7 @@ import java.net.UnknownHostException
 import java.util.Locale
 import javax.inject.Inject
 
+@HiltViewModel
 class InfoPokemonViewModel @Inject constructor (
     val apiRepositoryImpl: ApiRepositoryImpl,
     val jsonRepositoryImpl: JsonRepositoryImpl

@@ -103,7 +103,8 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
             )
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier
