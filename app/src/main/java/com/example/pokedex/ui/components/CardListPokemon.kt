@@ -18,16 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.pokedex.data.models.Pokemon
+import com.example.pokedex.R
+import com.example.pokedex.domain.models.PokemonModel
 
 @Composable
-fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemon: Pokemon) {
+fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemonModel: PokemonModel) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
             .clickable {
-                onPokemonSelected(pokemon.name)
+                onPokemonSelected(pokemonModel.name)
             },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -45,18 +46,20 @@ fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemon: Pokemon) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "#" + pokemon.id,
+                text = "#" + pokemonModel.id,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(15.dp))
             AsyncImage(
-                model = pokemon.sprites.other.officialArtwork.frontDefault,
+                model =
+                if (pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault.isNullOrEmpty()) R.drawable.pokeball
+                else pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
-                text = pokemon.name,
+                text = pokemonModel.name,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(5.dp))

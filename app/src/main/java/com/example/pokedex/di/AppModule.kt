@@ -2,6 +2,7 @@ package com.example.pokedex.di
 
 import android.app.Application
 import com.example.pokedex.data.repositories.ApiRepositoryImpl
+import com.example.pokedex.data.repositories.FallBackRepositoryImpl
 import com.example.pokedex.data.repositories.JsonRepositoryImpl
 import com.example.pokedex.data.repositories.PokeApiService
 import dagger.Module
@@ -36,5 +37,11 @@ object AppModule {
     @Singleton
     fun provideJsonRepositoryImpl(application: Application): JsonRepositoryImpl {
         return JsonRepositoryImpl(application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFallBackRepositoryImpl(apiRepositoryImpl: ApiRepositoryImpl, jsonRepositoryImpl: JsonRepositoryImpl): FallBackRepositoryImpl {
+        return FallBackRepositoryImpl(apiRepositoryImpl, jsonRepositoryImpl)
     }
 }

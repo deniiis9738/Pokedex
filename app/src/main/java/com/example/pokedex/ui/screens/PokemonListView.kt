@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -63,7 +62,7 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
 
     LaunchedEffect(lazyGridState.layoutInfo.visibleItemsInfo) {
         val lastVisibleItemIndex = lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-        val totalPokemons = pokemonListViewModel.pokemonListWithInfo.value?.size ?: 0
+        val totalPokemons = pokemonListViewModel.pokemonModelListWithInfo.value?.size ?: 0
 
         if (lastVisibleItemIndex != null && lastVisibleItemIndex >= totalPokemons - 1 && !isLoading) {
             isLoading = true
@@ -72,8 +71,8 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
             }
         }
     }
-    val pokemonListWithInfo by pokemonListViewModel.pokemonListWithInfo.observeAsState(emptyList())
-    val pokemonFilteredList by pokemonListViewModel.pokemonFilteredList.observeAsState(emptyList())
+    val pokemonListWithInfo by pokemonListViewModel.pokemonModelListWithInfo.observeAsState(emptyList())
+    val pokemonFilteredList by pokemonListViewModel.pokemonModelFilteredList.observeAsState(emptyList())
 
     var isLoadingScreen by remember { mutableStateOf(true) }
 
@@ -102,14 +101,15 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                 contentScale = ContentScale.Crop
             )
             Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(8.dp),
-                    color = Color.Red
+                Image(
+                    painter = painterResource(id = R.drawable.titulopokemon),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(300.dp)
                 )
             }
         } else {

@@ -1,45 +1,35 @@
 package com.example.pokedex.ui.viewmodels
 
-import com.example.pokedex.data.models.Pokemon
-import android.app.Application
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex.data.repositories.ApiRepositoryImpl
-import com.example.pokedex.data.repositories.JsonRepositoryImpl
+import com.example.pokedex.domain.models.PokemonModel
+import com.example.pokedex.domain.usecases.InfoPokemonUseCase
 import com.example.pokedex.ui.utils.ColorStats
 import com.example.pokedex.ui.utils.ColorTypes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.UnknownHostException
 import java.util.Locale
 import javax.inject.Inject
 
+@HiltViewModel
 class InfoPokemonViewModel @Inject constructor (
-    val apiRepositoryImpl: ApiRepositoryImpl,
-    val jsonRepositoryImpl: JsonRepositoryImpl
+    private val infoPokemonUseCase: InfoPokemonUseCase
 ): ViewModel() {
 
-    private var _pokemon = MutableLiveData<Pokemon>()
-    val pokemon: LiveData<Pokemon> = _pokemon
+    private var _pokemonModel = MutableLiveData<PokemonModel>()
+    val pokemonModel: LiveData<PokemonModel> = _pokemonModel
 
     fun getPokemon(name: String) {
         viewModelScope.launch {
-            try {
-                val loadedPokemon = withContext(Dispatchers.IO) {
-                    apiRepositoryImpl.getPokemonByName(name)
-                }
-                _pokemon.postValue(loadedPokemon)
-            } catch (e: UnknownHostException) {
-                val loadedPokemon = withContext(Dispatchers.IO) {
-                    jsonRepositoryImpl.getPokemonByName(name)
-                }
-                _pokemon.postValue(loadedPokemon)
+            val loadedPokemon = withContext(Dispatchers.IO) {
+                infoPokemonUseCase.getPokemonByName(name)
             }
+            _pokemonModel.postValue(loadedPokemon)
         }
     }
 

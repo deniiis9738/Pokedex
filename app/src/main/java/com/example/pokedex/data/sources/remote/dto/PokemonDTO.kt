@@ -1,19 +1,19 @@
-package com.example.pokedex.data.models
+package com.example.pokedex.data.sources.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Pokemon(
+data class PokemonDTO(
     @SerializedName("id")
     val id: String,
 
     @SerializedName("sprites")
-    val sprites: Sprites,
+    val spritesDTO: SpritesDTO,
 
     @SerializedName("name")
     val name: String,
 
     @SerializedName("types")
-    val types: List<Types>,
+    val types: List<TypesDTO>,
 
     @SerializedName("weight")
     val weight: Float,
@@ -22,44 +22,44 @@ data class Pokemon(
     val height: Float,
 
     @SerializedName("stats")
-    val stats: List<Stat>
+    val statDTOS: List<StatDTO>
 )
 
-data class Sprites(
+data class SpritesDTO(
     @SerializedName("other")
-    val other: Other
+    val otherDTO: OtherDTO
 )
 
-data class Other(
+data class OtherDTO(
     @SerializedName("official-artwork")
-    val officialArtwork: OfficialArtwork
+    val officialArtworkDTO: OfficialArtworkDTO
 )
 
-data class OfficialArtwork(
+data class OfficialArtworkDTO(
     @SerializedName("front_default")
     val frontDefault: String
 )
 
-data class Types(
+data class TypesDTO(
     @SerializedName("slot")
     val slot: Int,
     @SerializedName("type")
-    val type: TypeInfo
+    val type: TypeInfoDTO
 )
 
-data class TypeInfo(
+data class TypeInfoDTO(
     @SerializedName("name")
     val name: String
 )
 
-data class Stat(
+data class StatDTO(
     @SerializedName("base_stat")
     val baseStat: Int,
     @SerializedName("stat")
-    val stat: StatInfo
+    val stat: StatInfoDTO
 )
 
-data class StatInfo(
+data class StatInfoDTO(
     @SerializedName("name")
     val name: String
 )

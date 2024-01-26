@@ -1,8 +1,9 @@
 package com.example.pokedex.data.repositories
 
 import android.app.Application
-import com.example.pokedex.data.models.Pokemon
-import com.example.pokedex.data.models.PokemonList
+import com.example.pokedex.data.sources.remote.dto.PokemonListDTO
+import com.example.pokedex.domain.models.PokemonListModel
+import com.example.pokedex.domain.models.PokemonModel
 import com.example.pokedex.domain.repositories.IPokemonRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -14,12 +15,12 @@ class JsonRepositoryImpl @Inject constructor(
 ): IPokemonRepository {
     private val gson = Gson()
 
-    override suspend fun getPokemonByName(name: String): Pokemon {
+    override suspend fun getPokemonByName(name: String): PokemonModel {
         val jsonInputStream = application.assets.open("$name.json")
-        return gson.fromJson(jsonInputStream.reader(), Pokemon::class.java)
+        return gson.fromJson(jsonInputStream.reader(), PokemonModel::class.java)
     }
 
-    override suspend fun getPokemonList(offset: Int, limit: Int): PokemonList {
+    override suspend fun getPokemonList(offset: Int, limit: Int): PokemonListModel {
         val jsonInputStream = application.assets.open("pokemon_list.json")
         val reader = BufferedReader(jsonInputStream.reader())
 
@@ -30,14 +31,14 @@ class JsonRepositoryImpl @Inject constructor(
                 jsonString.append(line)
             }
 
-            val type = object : TypeToken<PokemonList>() {}.type
-            val pokemonList = gson.fromJson<PokemonList>(jsonString.toString(), type)
+            val type = object : TypeToken<PokemonListModel>() {}.type
+            val pokemonListModel = gson.fromJson<PokemonListModel>(jsonString.toString(), type)
 
             val startIndex = offset.coerceAtLeast(0)
-            val endIndex = (offset + limit).coerceAtMost(pokemonList.results.size)
-            val trimmedResults = pokemonList.results.subList(startIndex, endIndex)
+            val endIndex = (offset + limit).coerceAtMost(pokemonListModel.results.size)
+            val trimmedResults = pokemonListModel.results.subList(startIndex, endIndex)
 
-            return PokemonList(trimmedResults)
+            return PokemonListModel(trimmedResults)
         } finally {
             reader.close()
         }
@@ -47,8 +48,8 @@ class JsonRepositoryImpl @Inject constructor(
     override suspend fun getAllPokemonNames(): List<String> {
         val jsonInputStream = application.assets.open("pokemon_list.json")
         val reader = BufferedReader(jsonInputStream.reader())
-        val type = object : TypeToken<PokemonList>() {}.type
-        val pokemonList = gson.fromJson<PokemonList>(reader, type)
-        return pokemonList.results.map { it.name }
+        val type = object : TypeToken<PokemonListDTO>() {}.type
+        val pokemonListDTO = gson.fromJson<PokemonListDTO>(reader, type)
+        return pokemonListDTO.results.map { it.name }
     }
 }
