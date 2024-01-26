@@ -1,7 +1,7 @@
 package com.example.pokedex.data.repositories
 
 import android.app.Application
-import com.example.pokedex.data.dto.PokemonListDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonListDTO
 import com.example.pokedex.domain.models.PokemonListModel
 import com.example.pokedex.domain.models.PokemonModel
 import com.example.pokedex.domain.repositories.IPokemonRepository

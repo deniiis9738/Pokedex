@@ -1,4 +1,4 @@
-package com.example.pokedex.data.dto
+package com.example.pokedex.data.sources.remote.dto
 
 import com.google.gson.annotations.SerializedName
 

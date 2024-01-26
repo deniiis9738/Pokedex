@@ -1,7 +1,7 @@
 package com.example.pokedex.mappers.dtotomodel
 
-import com.example.pokedex.data.dto.PokemonListDTO
-import com.example.pokedex.data.dto.PokemonUrlDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonListDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonUrlDTO
 import com.example.pokedex.domain.models.PokemonListModel
 import com.example.pokedex.domain.models.PokemonUrlModel
 

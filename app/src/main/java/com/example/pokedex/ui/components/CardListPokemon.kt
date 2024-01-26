@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.pokedex.R
 import com.example.pokedex.domain.models.PokemonModel
 
 @Composable
@@ -49,19 +50,13 @@ fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemonModel: PokemonMo
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(15.dp))
-            if (pokemonModel.spritesModel != null) {
-                val frontDefault = pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault
-
-                // Verificar si la URL de la imagen no está vacía
-                if (!frontDefault.isNullOrEmpty()) {
-                    AsyncImage(
-                        model = frontDefault,
-                        contentDescription = null,
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                }
-            }
+            AsyncImage(
+                model =
+                if (pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault.isNullOrEmpty()) R.drawable.pokeball
+                else pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault,
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = pokemonModel.name,

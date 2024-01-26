@@ -1,13 +1,13 @@
 package com.example.pokedex.mappers.dtotomodel
 
-import com.example.pokedex.data.dto.OfficialArtworkDTO
-import com.example.pokedex.data.dto.OtherDTO
-import com.example.pokedex.data.dto.PokemonDTO
-import com.example.pokedex.data.dto.SpritesDTO
-import com.example.pokedex.data.dto.StatDTO
-import com.example.pokedex.data.dto.StatInfoDTO
-import com.example.pokedex.data.dto.TypeInfoDTO
-import com.example.pokedex.data.dto.TypesDTO
+import com.example.pokedex.data.sources.remote.dto.OfficialArtworkDTO
+import com.example.pokedex.data.sources.remote.dto.OtherDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonDTO
+import com.example.pokedex.data.sources.remote.dto.SpritesDTO
+import com.example.pokedex.data.sources.remote.dto.StatDTO
+import com.example.pokedex.data.sources.remote.dto.StatInfoDTO
+import com.example.pokedex.data.sources.remote.dto.TypeInfoDTO
+import com.example.pokedex.data.sources.remote.dto.TypesDTO
 import com.example.pokedex.domain.models.OfficialArtworkModel
 import com.example.pokedex.domain.models.OtherModel
 import com.example.pokedex.domain.models.PokemonModel

@@ -1,7 +1,7 @@
 package com.example.pokedex.data.repositories
 
-import com.example.pokedex.data.dto.PokemonDTO
-import com.example.pokedex.data.dto.PokemonListDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonDTO
+import com.example.pokedex.data.sources.remote.dto.PokemonListDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
