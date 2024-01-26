@@ -1,13 +1,13 @@
-package com.example.pokedex.data.models
+package com.example.pokedex.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonList(
+data class PokemonListDTO(
     @SerializedName("results")
-    val results: List<PokemonUrl>
+    val results: List<PokemonUrlDTO>
 )
 
-data class PokemonUrl(
+data class PokemonUrlDTO(
     @SerializedName("name")
     val name: String,
     @SerializedName("url")

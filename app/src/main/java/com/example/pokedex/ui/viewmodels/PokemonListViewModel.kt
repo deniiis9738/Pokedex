@@ -4,20 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex.data.models.Pokemon
-import com.example.pokedex.data.repositories.ApiRepositoryImpl
-import com.example.pokedex.data.repositories.JsonRepositoryImpl
+import com.example.pokedex.domain.models.PokemonModel
+import com.example.pokedex.domain.usecases.InfoPokemonUseCase
+import com.example.pokedex.domain.usecases.PokemonListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    private val apiRepositoryImpl: ApiRepositoryImpl,
-    private val jsonRepositoryImpl: JsonRepositoryImpl
+    private val pokemonListUseCase: PokemonListUseCase,
+    private val infoPokemonUseCase: InfoPokemonUseCase
 ) : ViewModel() {
 
     init {
@@ -27,8 +26,8 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    private var _pokemonListWithInfo = MutableLiveData<List<Pokemon>>()
-    val pokemonListWithInfo: LiveData<List<Pokemon>> = _pokemonListWithInfo
+    private var _pokemonModelListWithInfo = MutableLiveData<List<PokemonModel>>()
+    val pokemonModelListWithInfo: LiveData<List<PokemonModel>> = _pokemonModelListWithInfo
 
     private var currentPage = 0
     private var isLoading = false
@@ -39,19 +38,12 @@ class PokemonListViewModel @Inject constructor(
             isLoading = true
             val start = currentPage * pageSize
             val loadedPokemonList = withContext(Dispatchers.IO) {
-                try {
-                    val pokemonList = apiRepositoryImpl.getPokemonList(start, pageSize)
-                    pokemonList.results.map { pokemon ->
-                        apiRepositoryImpl.getPokemonByName(pokemon.name)
-                    }   
-                } catch (e: UnknownHostException) {
-                    val pokemonList = jsonRepositoryImpl.getPokemonList(start, pageSize)
-                    pokemonList.results.map { pokemon ->
-                        jsonRepositoryImpl.getPokemonByName(pokemon.name)
-                    }
+                val pokemonList = pokemonListUseCase.getPokemonList(start, pageSize)
+                pokemonList.results.map { pokemon ->
+                    infoPokemonUseCase.getPokemonByName(pokemon.name)
                 }
             }
-            _pokemonListWithInfo.postValue(_pokemonListWithInfo.value.orEmpty() + loadedPokemonList)
+            _pokemonModelListWithInfo.postValue(_pokemonModelListWithInfo.value.orEmpty() + loadedPokemonList)
             isLoading = false
             currentPage++
             onLoadComplete()
@@ -62,39 +54,22 @@ class PokemonListViewModel @Inject constructor(
 
     private suspend fun getAllPokemonNames() {
         allPokemonNames = withContext(Dispatchers.IO) {
-            try {
-                jsonRepositoryImpl.getAllPokemonNames()
-            } catch (e: UnknownHostException) {
-                jsonRepositoryImpl.getAllPokemonNames()
-            }
+            pokemonListUseCase.getAllPokemonNames()
         }
     }
 
-    private var _pokemonFilteredList = MutableLiveData<List<Pokemon>>()
-    val pokemonFilteredList: LiveData<List<Pokemon>> = _pokemonFilteredList
+    private var _pokemonModelFilteredList = MutableLiveData<List<PokemonModel>>()
+    val pokemonModelFilteredList: LiveData<List<PokemonModel>> = _pokemonModelFilteredList
 
     suspend fun filterPokemonListByName(searchText: String) {
-        try {
-            val filteredList = allPokemonNames
-                .filter { it.startsWith(searchText, ignoreCase = true) }
-                .take(10)
-                .map { name ->
-                    apiRepositoryImpl.getPokemonByName(name)
-                }
-
-            _pokemonFilteredList.value = filteredList
-        } catch (e: Exception) {
-            val start = currentPage * pageSize
-            val loadedPokemonList = withContext(Dispatchers.IO) {
-                val pokemonList = jsonRepositoryImpl.getPokemonList(start, pageSize)
-                pokemonList.results.map { pokemon ->
-                    jsonRepositoryImpl.getPokemonByName(pokemon.name)
-                }
+        val filteredList = allPokemonNames
+            .filter { it.startsWith(searchText, ignoreCase = true) }
+            .take(10)
+            .map { name ->
+                infoPokemonUseCase.getPokemonByName(name)
             }
-            _pokemonListWithInfo.postValue(_pokemonListWithInfo.value.orEmpty() + loadedPokemonList)
-            isLoading = false
-            currentPage++
-        }
+
+        _pokemonModelFilteredList.value = filteredList
     }
 
     fun performSearch(searchText: String) {

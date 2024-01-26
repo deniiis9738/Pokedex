@@ -1,6 +1,6 @@
 package com.example.pokedex.ui.screens
 
-import com.example.pokedex.data.models.Pokemon
+import com.example.pokedex.domain.models.PokemonModel
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,7 +48,7 @@ import java.util.Locale
 @Composable
 fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel, pokemonName: String, onBackClicked: () -> Unit) {
     infoPokemonViewModel.getPokemon(pokemonName)
-    val pokemon by infoPokemonViewModel.pokemon.observeAsState()
+    val pokemon by infoPokemonViewModel.pokemonModel.observeAsState()
     val types = pokemon?.types ?: emptyList()
 
     val context = LocalContext.current
@@ -76,11 +76,18 @@ fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel, pokemonName: Str
                 contentAlignment = Alignment.Center
             ) {
                 pokemon?.let {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = it.sprites.other.officialArtwork.frontDefault),
-                        contentDescription = it.id,
-                        contentScale = ContentScale.Crop,
-                    )
+                    if (pokemon?.spritesModel != null) {
+                        val frontDefault =
+                            it.spritesModel.otherModel?.officialArtworkModel?.frontDefault
+
+                        if (!frontDefault.isNullOrEmpty()) {
+                            Image(
+                                painter = rememberAsyncImagePainter(model = frontDefault),
+                                contentDescription = it.id,
+                                contentScale = ContentScale.Crop,
+                            )
+                        }
+                    }
                 }
             }
             pokemon?.let {
@@ -173,7 +180,7 @@ fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel, pokemonName: Str
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val stats = pokemon?.stats ?: emptyList()
+                val stats = pokemon?.statModels ?: emptyList()
 
                 items(stats) { stat ->
                     val statNameText = when (stat.stat.name) {
@@ -232,8 +239,8 @@ fun InfoPokemonView(infoPokemonViewModel: InfoPokemonViewModel, pokemonName: Str
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel, onBackClicked: () -> Unit) {
-    val types = pokemon.types
+fun TopBar(pokemonModel: PokemonModel, infoPokemonViewModel: InfoPokemonViewModel, onBackClicked: () -> Unit) {
+    val types = pokemonModel.types
     TopAppBar(
         title = { Text(
             text = "Pokedex",
@@ -258,7 +265,7 @@ fun TopBar(pokemon: Pokemon, infoPokemonViewModel: InfoPokemonViewModel, onBackC
                 onClick = { /*TODO*/ }
             ) {
                 Text(
-                    text = "#${pokemon.id}",
+                    text = "#${pokemonModel.id}",
                     color = Color.White
                 )
             }
