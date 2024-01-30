@@ -108,7 +108,6 @@ fun PokemonListView(pokemonListViewModel: PokemonListViewModel, onPokemonSelecte
                 Image(
                     painter = painterResource(id = R.drawable.titulopokemon),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier.size(300.dp)
                 )
             }

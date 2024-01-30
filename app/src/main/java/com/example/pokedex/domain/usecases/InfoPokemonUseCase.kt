@@ -7,7 +7,7 @@ import javax.inject.Inject
 class InfoPokemonUseCase @Inject constructor(
     private val repository: IPokemonRepository
 ) {
-    suspend fun getPokemonByName(name: String): PokemonModel {
+    suspend fun getPokemonByName(name: String): PokemonModel? {
         return repository.getPokemonByName(name)
     }
 }

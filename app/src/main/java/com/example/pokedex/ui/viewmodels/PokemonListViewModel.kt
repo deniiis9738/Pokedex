@@ -26,8 +26,8 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    private var _pokemonModelListWithInfo = MutableLiveData<List<PokemonModel>>()
-    val pokemonModelListWithInfo: LiveData<List<PokemonModel>> = _pokemonModelListWithInfo
+    private var _pokemonModelListWithInfo = MutableLiveData<List<PokemonModel?>>()
+    val pokemonModelListWithInfo: LiveData<List<PokemonModel?>> = _pokemonModelListWithInfo
 
     private var currentPage = 0
     private var isLoading = false
@@ -58,8 +58,8 @@ class PokemonListViewModel @Inject constructor(
         }
     }
 
-    private var _pokemonModelFilteredList = MutableLiveData<List<PokemonModel>>()
-    val pokemonModelFilteredList: LiveData<List<PokemonModel>> = _pokemonModelFilteredList
+    private var _pokemonModelFilteredList = MutableLiveData<List<PokemonModel?>>()
+    val pokemonModelFilteredList: LiveData<List<PokemonModel?>> = _pokemonModelFilteredList
 
     suspend fun filterPokemonListByName(searchText: String) {
         val filteredList = allPokemonNames

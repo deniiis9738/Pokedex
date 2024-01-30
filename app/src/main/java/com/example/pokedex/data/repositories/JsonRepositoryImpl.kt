@@ -15,9 +15,13 @@ class JsonRepositoryImpl @Inject constructor(
 ): IPokemonRepository {
     private val gson = Gson()
 
-    override suspend fun getPokemonByName(name: String): PokemonModel {
-        val jsonInputStream = application.assets.open("$name.json")
-        return gson.fromJson(jsonInputStream.reader(), PokemonModel::class.java)
+    override suspend fun getPokemonByName(name: String): PokemonModel? {
+        try {
+            val jsonInputStream = application.assets.open("$name.json")
+            return gson.fromJson(jsonInputStream.reader(), PokemonModel::class.java)
+        } catch (e: Exception) {
+            return null
+        }
     }
 
     override suspend fun getPokemonList(offset: Int, limit: Int): PokemonListModel {
@@ -48,8 +52,8 @@ class JsonRepositoryImpl @Inject constructor(
     override suspend fun getAllPokemonNames(): List<String> {
         val jsonInputStream = application.assets.open("pokemon_list.json")
         val reader = BufferedReader(jsonInputStream.reader())
-        val type = object : TypeToken<PokemonListDTO>() {}.type
-        val pokemonListDTO = gson.fromJson<PokemonListDTO>(reader, type)
+        val type = object : TypeToken<PokemonListModel>() {}.type
+        val pokemonListDTO = gson.fromJson<PokemonListModel>(reader, type)
         return pokemonListDTO.results.map { it.name }
     }
 }

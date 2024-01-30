@@ -22,13 +22,15 @@ import com.example.pokedex.R
 import com.example.pokedex.domain.models.PokemonModel
 
 @Composable
-fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemonModel: PokemonModel) {
+fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemonModel: PokemonModel?) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
             .clickable {
-                onPokemonSelected(pokemonModel.name)
+                if (pokemonModel != null) {
+                    onPokemonSelected(pokemonModel.name)
+                }
             },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -46,22 +48,24 @@ fun CardListPokemon(onPokemonSelected: (String) -> Unit, pokemonModel: PokemonMo
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "#" + pokemonModel.id,
+                text = "#" + pokemonModel?.id,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(15.dp))
             AsyncImage(
                 model =
-                if (pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault.isNullOrEmpty()) R.drawable.pokeball
-                else pokemonModel.spritesModel.otherModel?.officialArtworkModel?.frontDefault,
+                if (pokemonModel?.spritesModel?.otherModel?.officialArtworkModel?.frontDefault.isNullOrEmpty()) R.drawable.pokeball
+                else pokemonModel?.spritesModel?.otherModel?.officialArtworkModel?.frontDefault,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = pokemonModel.name,
-                color = Color.Black
-            )
+            if (pokemonModel != null) {
+                Text(
+                    text = pokemonModel.name,
+                    color = Color.Black
+                )
+            }
             Spacer(modifier = Modifier.height(5.dp))
         }
     }

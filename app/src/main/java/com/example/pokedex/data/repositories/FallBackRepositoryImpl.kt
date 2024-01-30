@@ -9,11 +9,11 @@ class FallBackRepositoryImpl @Inject constructor(
     val apiRepositoryImpl: ApiRepositoryImpl,
     val jsonRepositoryImpl: JsonRepositoryImpl
 ): IPokemonRepository {
-    override suspend fun getPokemonByName(name: String): PokemonModel {
+    override suspend fun getPokemonByName(name: String): PokemonModel? {
         return try {
             apiRepositoryImpl.getPokemonByName(name)
         }catch (e: Exception) {
-            return jsonRepositoryImpl.getPokemonByName("bulbasaur")
+            return jsonRepositoryImpl.getPokemonByName(name)
         }
     }
 
